@@ -1,5 +1,6 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
 import { db } from "@/db";
 import { redirect } from "next/navigation";
 
@@ -41,7 +42,8 @@ export async function createSnippet(
       };
     }
   }
-
+  // Revalidate the home page to reflect the new snippet
+  revalidatePath("/");
   redirect("/");
 }
 
@@ -54,6 +56,7 @@ export async function editSnippet(id: number, code: string) {
     },
   });
 
+  revalidatePath(`/snippets/${id}`);
   redirect(`/snippets/${id}`);
 }
 
@@ -63,5 +66,7 @@ export async function deleteSnippet(id: number) {
     where: { id },
   });
 
+  // Revalidate the home page to reflect the deletion
+  revalidatePath(`/`);
   redirect(`/`);
 }

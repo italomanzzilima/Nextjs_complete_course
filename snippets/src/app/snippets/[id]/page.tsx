@@ -4,13 +4,13 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 
 interface SnippetsShowPageProps {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 
-const SnippetShowPage = async (props: SnippetsShowPageProps) => {
-  const { id } = await props.params;
+const SnippetShowPage = async ({ params }: SnippetsShowPageProps) => {
+  const { id } = await params;
 
   const snippet = await db.snippet.findFirst({
     where: {
@@ -35,7 +35,6 @@ const SnippetShowPage = async (props: SnippetsShowPageProps) => {
           >
             Edit
           </Link>
-
           {/* Using a form to handle the delete action */}
           <form action={deleteSnippetAction}>
             <button className="p-2 border rounded cursor-pointer">
@@ -52,3 +51,11 @@ const SnippetShowPage = async (props: SnippetsShowPageProps) => {
 };
 
 export default SnippetShowPage;
+
+// Generate static paths for the snippets
+export async function generateStaticParams() {
+  const snippets = await db.snippet.findMany();
+  return snippets.map((snippet) => ({
+    id: snippet.id.toString(),
+  }));
+}
