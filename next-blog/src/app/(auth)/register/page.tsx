@@ -26,11 +26,11 @@ export default function Register() {
         <div>
           <label htmlFor="password">Password</label>
           <input type="password" name="password" id="password" />
-          {state?.errors.fieldErrors.password && (
+          {state?.errors?.fieldErrors?.password && (
             <div className="error">
               <p>Password must:</p>
               <ul className="list-disc list-inside ml-4">
-                {state?.errors.fieldErrors.password.map((error) => (
+                {state?.errors?.fieldErrors?.password.map((error) => (
                   <li key={error}>{error}</li>
                 ))}
               </ul>
