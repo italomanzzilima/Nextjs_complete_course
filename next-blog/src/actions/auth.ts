@@ -5,6 +5,7 @@ import { RegisterFormSchema } from "@/lib/rules";
 import { getCollection } from "@/lib/db";
 import bcrypt from "bcrypt";
 import { redirect } from "next/navigation";
+import { createSession } from "@/lib/sessions";
 
 export async function register(state: unknown, formData: FormData) {
   // validates fields
@@ -22,6 +23,7 @@ export async function register(state: unknown, formData: FormData) {
       email: formData.get("email"),
     };
   }
+
   // extract email and password
   const { email, password } = validatedFields.data;
 
@@ -59,6 +61,9 @@ export async function register(state: unknown, formData: FormData) {
     email,
     password: hashedPassword,
   });
+
+  // create a session
+  await createSession(result.insertedId.toString());
 
   console.log(result);
   redirect("/dashboard");
